@@ -1,14 +1,13 @@
-import { call, fork, take } from '@redux-saga/core/effects';
+import { actionChannel, call, take } from '@redux-saga/core/effects';
 import { createStoreWithSaga } from '../../utils';
 
 function* watchRequests() {
+  const chan = yield actionChannel('REQUEST');
   while (true) {
-    const { payload } = yield take('REQUEST');
-    console.log(`${new Date().toISOString()} payload:`, payload);
-    // Non-block
-    yield fork(handleRequest, payload);
-    // Continue executing
-    console.log('forked a task');
+    const { payload } = yield take(chan);
+    // block here until call(handleRquest) returns, then take next action from actionChannel
+    yield call(handleRequest, payload);
+    console.log(`${new Date().toISOString()} handle a task`);
   }
 }
 
