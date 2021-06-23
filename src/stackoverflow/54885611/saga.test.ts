@@ -27,6 +27,8 @@ describe('54885611', () => {
         logSpy.mockRestore();
       })
       .next()
-      .put(actions.done());
+      .put(actions.done())
+      .next()
+      .isDone();
   });
 });
